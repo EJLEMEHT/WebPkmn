@@ -29,6 +29,9 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     public Student save(Student student) {
+        if (studentDao.studentExists(student)) {
+            throw new IllegalArgumentException("Student is already exist error");
+        }
         return studentDao.save(student);
     }
 

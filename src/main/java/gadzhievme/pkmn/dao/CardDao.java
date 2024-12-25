@@ -20,7 +20,6 @@ public class CardDao {
 
     @SneakyThrows
     public Card getCardById(UUID id) {
-        System.out.println("??");
         return Card.fromEntity(cardEntityRepository.findById(id).orElseThrow(
                 () -> new UserPrincipalNotFoundException("Card" +
                         "with id " + id + " not found")
@@ -47,11 +46,10 @@ public class CardDao {
     }
     @SneakyThrows
     public List<Card> getAll() {
-        List<Card> cards = new ArrayList<>();
-        List<CardEntity> entities = cardEntityRepository.findAll();
-        for (int i = 0; i < entities.size(); i++) {
-            cards.add(Card.fromEntity(entities.get(i)));
-        }
-        return cards;
+        return cardEntityRepository.findAll().stream().map(Card::fromEntity).toList();
+    }
+
+    public boolean cardExists(Card card) {
+        return cardEntityRepository.existsByName(card.getName());
     }
 }

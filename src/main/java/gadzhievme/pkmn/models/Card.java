@@ -73,20 +73,20 @@ public class Card implements Serializable {
                 .name(entity.getName())
                 .hp(entity.getHp())
                 .pokemonType(EnergyType.valueOf(entity.getPokemon_type()))
-                .evolvesFrom(Card.fromEntity(entity.getEvolvesFrom()))
                 .skills(entity.getSkills())
                 .weaknessType(EnergyType.valueOf(entity.getWeakness_type()))
-                .resistanceType(EnergyType.valueOf(entity.getResistance_type()))
                 .retreatCost(entity.getRetreat_cost())
                 .gameSet(entity.getGame_set())
                 .regulationMark(entity.getRegulation_mark())
-                .pokemonOwner(Student.fromEntity(entity.getPokemonOwner()))
                 .card_number(entity.getCard_number());
         if (entity.getEvolvesFrom() != null) {
             cardBuilder.evolvesFrom(Card.fromEntity(entity.getEvolvesFrom()));
         }
         if (entity.getResistance_type() != null) {
             cardBuilder.resistanceType(EnergyType.valueOf(entity.getResistance_type()));
+        }
+        if (entity.getPokemonOwner() != null) {
+            cardBuilder.pokemonOwner(Student.fromEntity(entity.getPokemonOwner()));
         }
         return cardBuilder.build();
     }

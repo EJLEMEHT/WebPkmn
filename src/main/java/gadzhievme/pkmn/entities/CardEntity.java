@@ -3,10 +3,7 @@ package gadzhievme.pkmn.entities;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import gadzhievme.pkmn.models.*;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -17,16 +14,18 @@ import java.util.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class CardEntity {
     @Id
     private UUID id;
     private String name;
     private int hp;
-    @OneToOne
+    @ManyToOne(cascade = CascadeType.ALL, optional = true)
     @JoinColumn(name = "evolves_from_id")
     private CardEntity evolvesFrom;
     private String game_set;
-    @OneToOne
+    @ManyToOne(cascade = CascadeType.ALL, optional = true)
     @JoinColumn(name = "pokemon_owner_id")
     private StudentEntity pokemonOwner;
     private String stage;
@@ -53,13 +52,15 @@ public class CardEntity {
                     .retreat_cost(card.getRetreatCost())
                     .game_set(card.getGameSet())
                     .regulation_mark(card.getRegulationMark())
-                    .pokemonOwner(StudentEntity.fromDTO(card.getPokemonOwner()))
                     .card_number(card.getCard_number());
                     if (card.getEvolvesFrom() != null) {
                         cardEntityBuilder.evolvesFrom(CardEntity.fromDTO(card.getEvolvesFrom()));
                     }
                     if (card.getResistanceType() != null) {
                         cardEntityBuilder.resistance_type(card.getResistanceType().toString());
+                    }
+                    if (card.getPokemonOwner() != null) {
+                        cardEntityBuilder.pokemonOwner(StudentEntity.fromDTO(card.getPokemonOwner()));
                     }
             return cardEntityBuilder.build();
     }

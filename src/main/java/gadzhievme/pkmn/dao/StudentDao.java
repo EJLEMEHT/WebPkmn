@@ -62,12 +62,17 @@ public class StudentDao {
 
     @SneakyThrows
     public Student save(Student student) {
-        System.out.println(StudentEntity.fromDTO(student).toString());
         return Student.fromEntity(studentEntityRepository.save(StudentEntity.fromDTO(student)));
     }
 
     @SneakyThrows
     public List<Student> getAll() {
         return studentEntityRepository.findAll().stream().map(Student::fromEntity).toList();
+    }
+
+    public boolean studentExists(Student student) {
+        return studentEntityRepository.existsByFirstNameAndSurNameAndFamilyName(student.getFirstName(),
+                student.getSurName(),
+                student.getFamilyName());
     }
 }

@@ -5,10 +5,12 @@ import gadzhievme.pkmn.dao.StudentDao;
 import gadzhievme.pkmn.entities.CardEntity;
 import gadzhievme.pkmn.entities.StudentEntity;
 import gadzhievme.pkmn.models.Card;
+import gadzhievme.pkmn.models.CardInfoResponse;
 import gadzhievme.pkmn.models.Student;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,10 +20,12 @@ import java.util.UUID;
 public class CardServiceImpl implements CardService{
     private final CardDao cardDao;
     private final StudentDao studentDao;
+    private final PokemonTcgService tcg;
 
     @Override
-    public Card getCardById(UUID id) {
-        return cardDao.getCardById(id);
+    public CardInfoResponse getCardById(UUID id) {
+        Card card = cardDao.getCardById(id);
+        return CardInfoResponse.fromCard(cardDao.getCardById(id), tcg.getCardImageUrl(card.getName(), card.getCard_number()));
     };
 
     @Override
@@ -36,6 +40,10 @@ public class CardServiceImpl implements CardService{
     };
     @Override
     public Card save(Card card) {
+        if (cardDao.cardExists(card)) {
+            throw new IllegalArgumentException("Card is already exist error");
+        }
+
         return cardDao.save(card);
     }
 
